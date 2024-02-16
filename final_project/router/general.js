@@ -89,20 +89,28 @@ public_users.get("/author/:author", async (req, res) => {
 // Get all books based on title
 public_users.get("/title/:title", async (req, res) => {
   //Write your code here
-  const title = req.params.title;
-  const booksFound = [];
-  for (const key in books) {
-    const book = books[key];
-    if (book.title === title) {
-      booksFound.push(book);
+  try {
+    const title = req.params.title;
+    const booksPromise = new Promise((resolve, reject) => {
+      const book = books[title];
+      resolve(book);
+    });
+    const booksFound = [];
+    for (const key in books) {
+      const book = books[key];
+      if (book.title === title) {
+        booksFound.push(book);
+      }
     }
-  }
-  if (booksFound.length > 0) {
-    return res.send(booksFound);
-  } else {
-    return res
-      .status(300)
-      .json({ message: `No books found by this title ${title}` });
+    if (booksFound.length > 0) {
+      return res.send(booksFound);
+    } else {
+      return res
+        .status(300)
+        .json({ message: `No books found by this title ${title}` });
+    }
+  } catch (error) {
+    res.status(500).send("Error fetching books with this title");
   }
 });
 
