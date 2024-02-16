@@ -84,11 +84,20 @@ public_users.get("/title/:title", function (req, res) {
 //  Get book review
 public_users.get("/review/:isbn", function (req, res) {
   //Write your code here
-  const reviews = req.params.reviews;
-  if (book.reviews === "") {
-    return res.send(book.reviews);
+  const isbn = req.params.isbn;
+  const booksFound = [];
+  for (const key in books) {
+    const book = books[key];
+    if (book.isbn === isbn) {
+      booksFound.push(book);
+    }
+  }
+  if (booksFound.length > 0) {
+    return res.send(booksFound);
   } else {
-    return res.status(300).json("No reviews available");
+    return res
+      .status(300)
+      .json({ message: `No reviews for this book found by this isbn ${isbn}` });
   }
 });
 

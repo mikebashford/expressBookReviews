@@ -21,10 +21,8 @@ const isValid = (username) => {
 const authenticatedUser = (username, password) => {
   //returns boolean
   //write code to check if username and password match the one we have in records.
-  let validUsers = users.filter((user) => {
-    return user.username === username && user.password === password;
-  });
-  if (validUsers.length > 0) {
+  const user = users.find((user) => user.username === username);
+  if (user && user.password === password) {
     return true;
   } else {
     return false;
@@ -34,11 +32,6 @@ const authenticatedUser = (username, password) => {
 //only registered users can login
 regd_users.post("/login", (req, res) => {
   //Write your code here
-  const username = req.params.username;
-  const password = req.params.password;
-  if (!username || !password) {
-    return res.status(404).json({ message: "Error logging in" });
-  }
   if (authenticatedUser(username, password)) {
     let accessToken = jwt.sign(
       {
@@ -77,6 +70,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   }
 });
 
+console.log(authenticatedUser());
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
