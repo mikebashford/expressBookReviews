@@ -36,41 +36,58 @@ public_users.get("/", async (req, res) => {
 });
 
 // Get book details based on ISBN
-public_users.get("/isbn/:isbn", function (req, res) {
+public_users.get("/isbn/:isbn", async (req, res) => {
   //Write your code here
-  const isbn = req.params.isbn;
-  const book = books[isbn];
-  if (book) {
-    res.send(book);
-  } else {
-    return res
-      .status(300)
-      .json({ message: `No books found by this ISBN ${isbn}` });
+  try {
+    const isbn = req.params.isbn;
+    const booksPromise = new Promise((resolve, reject) => {
+      const book = books[isbn];
+      resolve(book);
+    });
+
+    const book = books[isbn];
+    if (book) {
+      res.send(book);
+    } else {
+      return res
+        .status(300)
+        .json({ message: `No books found by this ISBN ${isbn}` });
+    }
+  } catch (error) {
+    res.status(500).send("Error fetching book");
   }
 });
 
 // Get book details based on author
-public_users.get("/author/:author", function (req, res) {
+public_users.get("/author/:author", async (req, res) => {
   //Write your code here
-  const author = req.params.author;
-  const booksFound = [];
-  for (const key in books) {
-    const book = books[key];
-    if (book.author === author) {
-      booksFound.push(book);
+  try {
+    const author = req.params.author;
+    const booksPromise = new Promise((resolve, reject) => {
+      const bookList = books[author];
+      resolve(bookList);
+    });
+    const booksFound = [];
+    for (const key in books) {
+      const book = books[key];
+      if (book.author === author) {
+        booksFound.push(book);
+      }
     }
-  }
-  if (booksFound.length > 0) {
-    return res.send(booksFound);
-  } else {
-    return res
-      .status(300)
-      .json({ message: `No books found by this author ${author}` });
+    if (booksFound.length > 0) {
+      return res.send(booksFound);
+    } else {
+      return res
+        .status(300)
+        .json({ message: `No books found by this author ${author}` });
+    }
+  } catch (error) {
+    res.status(500).send("Error fetching books by this author");
   }
 });
 
 // Get all books based on title
-public_users.get("/title/:title", function (req, res) {
+public_users.get("/title/:title", async (req, res) => {
   //Write your code here
   const title = req.params.title;
   const booksFound = [];
