@@ -16,36 +16,86 @@ public_users.get("/", function (req, res) {
   Object.keys(books).forEach((key) => {
     const object = books[key];
     allBooks.push(
-      `Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
+      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
     );
   });
-  return res.status(300).json(allBooks.toString());
+  return res.send(allBooks);
 });
-
-//return res.status(300).json({message: "Yet to be implemented"});
 
 // Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
   //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const isbn = req.params.key;
+  let allBooks = [];
+  Object.keys(books).forEach((key) => {
+    const object = books[key];
+    allBooks.push(
+      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
+    );
+  });
+  let book = allBooks.filter((book) => book !== null)[0];
+  if (book) {
+    return res.send(book);
+  } else {
+    return res.status(300).json({ message: "No books found by this isbn" });
+  }
 });
 
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
   //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const author = req.params.author;
+  let allBooks = [];
+  Object.keys(books).forEach((key) => {
+    const object = books[key];
+    allBooks.push(
+      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
+    );
+  });
+  let book = allBooks.filter((book) => book !== null)[0];
+  if (book) {
+    return res.send(book);
+  } else {
+    return res.status(300).json({ message: "No books found by this author" });
+  }
 });
 
 // Get all books based on title
 public_users.get("/title/:title", function (req, res) {
   //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const title = req.params.title;
+  let allBooks = [];
+  Object.keys(books).forEach((key) => {
+    const object = books[key];
+    allBooks.push(
+      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
+    );
+  });
+  let book = allBooks.filter((book) => book !== null)[0];
+  if (book) {
+    return res.send(book);
+  } else {
+    return res.status(300).json({ message: "No books found by this title" });
+  }
 });
 
 //  Get book review
 public_users.get("/review/:isbn", function (req, res) {
   //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const reviews = req.params.reviews;
+  let allBooks = [];
+  Object.keys(books).forEach((key) => {
+    const object = books[key];
+    allBooks.push(
+      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
+    );
+  });
+  let book = allBooks.filter((book) => book !== null)[0];
+  if (book) {
+    return res.send(book);
+  } else {
+    return res.status(300).json({ message: "No books found by this author" });
+  }
 });
 
 module.exports.general = public_users;
