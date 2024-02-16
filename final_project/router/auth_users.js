@@ -8,10 +8,8 @@ let users = [];
 const isValid = (username) => {
   //returns boolean
   //write code to check is the username is valid
-  let userIsRegistered = users.filter((user) => {
-    return user.username === username;
-  });
-  if (userIsRegistered.length > 0) {
+  const userIsRegistered = users.find((user) => user.username === username);
+  if (userIsRegistered) {
     return true;
   } else {
     return false;
@@ -32,6 +30,11 @@ const authenticatedUser = (username, password) => {
 //only registered users can login
 regd_users.post("/login", (req, res) => {
   //Write your code here
+  const username = req.body.username;
+  const password = req.body.password;
+  if (!username || !password) {
+    return res.status(404).json({ message: "ERROR SIGNING IN" });
+  }
   if (authenticatedUser(username, password)) {
     let accessToken = jwt.sign(
       {
@@ -55,22 +58,42 @@ regd_users.post("/login", (req, res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
-  if (req.session.authorization) {
-    token = req.session.authorization["accessToken"];
-    jwt.verify(token, "access", (err, user) => {
-      if (!err) {
-        req.user = user;
-        next();
-      } else {
-        return res.status(403).json({ message: "User not authenticated" });
-      }
-    });
+  const isbn = req.params.isbn;
+  let bookFound = books[isbn];
+  if (bookFound) {
+    let review = req.query.review;
+    let reviewer = req.session.authorization["username"];
+    if (review) {
+      bookFound["reviews"][reviewer] = review;
+      books[isbn] = bookFound;
+    }
+    res.send(
+      `The review for the book with ISBN  ${isbn} has been added/updated.`
+    );
   } else {
-    return res.status(403).json({ message: "User not logged in" });
+    res.send("Unable to find this ISBN!");
   }
 });
 
-console.log(authenticatedUser());
+//Delete a book review
+regd_users.put("/auth/review/:isbn", (req, res) => {
+  //Write your code here
+  const isbn = req.params.isbn;
+  let bookFound = books[isbn];
+  if (bookFound) {
+    let review = req.query.review;
+    let reviewer = req.session.authorization["username"];
+    if (review) {
+      bookFound["reviews"][reviewer] = review;
+      books[isbn] = "";
+    }
+    res.send(`The review for the book with ISBN  ${isbn} has been deleted.`);
+  } else {
+    res.send("Unable to find this ISBN!");
+  }
+});
+
+console.log(users);
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
