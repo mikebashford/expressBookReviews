@@ -24,18 +24,21 @@ public_users.post("/register", (req, res) => {
 // Get the book list available in the shop
 public_users.get("/", function (req, res) {
   //Write your code here
-  return res.send(bookList());
+  return res.send(books);
 });
 
 // Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
   //Write your code here
-  const isbn = req.params.key;
-  // if (bookFilter.length > 0) {
-  //   res.send(bookFilter);
-  // } else {
-  //   return res.status(300).json({ message: "No books found by this ISBN" });
-  // }
+  const isbn = req.params.isbn;
+  const book = books[isbn];
+  if (book) {
+    res.send(book);
+  } else {
+    return res
+      .status(300)
+      .json({ message: `No books found by this ISBN ${isbn}` });
+  }
 });
 
 // Get book details based on author
