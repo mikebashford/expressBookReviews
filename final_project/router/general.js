@@ -65,11 +65,20 @@ public_users.get("/author/:author", function (req, res) {
 public_users.get("/title/:title", function (req, res) {
   //Write your code here
   const title = req.params.title;
-  // if () {
-  //   return res.send();
-  // } else {
-  return res.status(300).json({ message: "No books found by this title" });
-  // }
+  const booksFound = [];
+  for (const key in books) {
+    const book = books[key];
+    if (book.title === title) {
+      booksFound.push(book);
+    }
+  }
+  if (booksFound.length > 0) {
+    return res.send(booksFound);
+  } else {
+    return res
+      .status(300)
+      .json({ message: `No books found by this title ${title}` });
+  }
 });
 
 //  Get book review
