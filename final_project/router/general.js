@@ -9,7 +9,7 @@ public_users.post("/register", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   if (username && password) {
-    if (username !== "") {
+    if (!isValid(username)) {
       users.push({ username: username, password: password });
       return res
         .status(200)
@@ -24,86 +24,46 @@ public_users.post("/register", (req, res) => {
 // Get the book list available in the shop
 public_users.get("/", function (req, res) {
   //Write your code here
-  let allBooks = [];
-  Object.keys(books).forEach((key) => {
-    const object = books[key];
-    allBooks.push(
-      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
-    );
-  });
-  return res.send(allBooks);
+  return res.send(bookList());
 });
 
 // Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
   //Write your code here
   const isbn = req.params.key;
-  let allBooks = [];
-  Object.keys(books).forEach((key) => {
-    const object = books[key];
-    allBooks.push(
-      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
-    );
-  });
-  let book = allBooks.filter((book) => book !== null)[0];
-  if (book) {
-    return res.send(book);
-  } else {
-    return res.status(300).json({ message: "No books found by this isbn" });
-  }
+  // if (bookFilter.length > 0) {
+  //   res.send(bookFilter);
+  // } else {
+  //   return res.status(300).json({ message: "No books found by this ISBN" });
+  // }
 });
 
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
   //Write your code here
   const author = req.params.author;
-  let allBooks = [];
-  Object.keys(books).forEach((key) => {
-    const object = books[key];
-    allBooks.push(
-      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
-    );
-  });
-  let book = allBooks.filter((book) => book !== null)[0];
-  if (book) {
-    return res.send(book);
-  } else {
-    return res.status(300).json({ message: "No books found by this author" });
-  }
+  // if () {
+  //   return res.send();
+  // } else {
+  return res.status(300).json({ message: "No books found by this author" });
+  // }
 });
 
 // Get all books based on title
 public_users.get("/title/:title", function (req, res) {
   //Write your code here
   const title = req.params.title;
-  let allBooks = [];
-  Object.keys(books).forEach((key) => {
-    const object = books[key];
-    allBooks.push(
-      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
-    );
-  });
-  let book = allBooks.filter((book) => book !== null)[0];
-  if (book) {
-    return res.send(book);
-  } else {
-    return res.status(300).json({ message: "No books found by this title" });
-  }
+  // if () {
+  //   return res.send();
+  // } else {
+  return res.status(300).json({ message: "No books found by this title" });
+  // }
 });
 
 //  Get book review
 public_users.get("/review/:isbn", function (req, res) {
   //Write your code here
   const reviews = req.params.reviews;
-  let allBooks = [];
-  Object.keys(books).forEach((key) => {
-    const object = books[key];
-    allBooks.push(
-      `Key: ${key}, Author: ${object.author}, Title: ${object.title}, Reviews: ${object.reviews.stringify}`
-    );
-  });
-  let book = allBooks.filter((book) => book !== null)[0];
-  console.log(book.reviews);
   if (book.reviews === "") {
     return res.send(book.reviews);
   } else {

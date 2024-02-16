@@ -34,8 +34,8 @@ const authenticatedUser = (username, password) => {
 //only registered users can login
 regd_users.post("/login", (req, res) => {
   //Write your code here
-  const username = req.body.username;
-  const password = req.body.password;
+  const username = req.params.username;
+  const password = req.params.password;
   if (!username || !password) {
     return res.status(404).json({ message: "Error logging in" });
   }
