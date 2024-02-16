@@ -22,9 +22,17 @@ public_users.post("/register", (req, res) => {
 });
 
 // Get the book list available in the shop
-public_users.get("/", function (req, res) {
+public_users.get("/", async (req, res) => {
   //Write your code here
-  return res.send(JSON.stringify({ books }, null, 4));
+  try {
+    const booksPromise = new Promise((resolve, reject) => {
+      resolve(books);
+    });
+    const bookList = await booksPromise;
+    res.send(JSON.stringify({ books }, null, 4));
+  } catch (error) {
+    res.status(500).send("Error fetching books");
+  }
 });
 
 // Get book details based on ISBN
